@@ -44,7 +44,7 @@ with open(args.csv_file, newline='') as csvfile:
             os.system("rm -rf "+repo_name)
         
         # Create the local directory using the repository name for result output
-        result_folder = "/results/"+str(repo_name)
+        result_folder = "./results/"+str(repo_name)
         if not os.path.exists(result_folder):
             os.makedirs(result_folder)
 
