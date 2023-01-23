@@ -22,17 +22,6 @@ parser.add_argument('-p', '--password', help='GitLab password')
 # Parse the arguments
 args = parser.parse_args()
 
-def generate_report(folder, output_folder):
-    """
-    Generate a report using PHPMetrics on the specified folder and save it in the output folder.
-    :param folder: The name of the folder/repo to generate the report on.
-    :param output_folder: The name of the folder to save the report in.
-    """
-    # generate the report
-    subprocess.run(["phpmetrics", folder, "--report-html=" + output_folder])
-    print(f"Successfully generated report for {folder} in {output_folder}")
-
-
 # Open the CSV file
 with open(args.csv_file, newline='') as csvfile:
     reader = csv.DictReader(csvfile)
