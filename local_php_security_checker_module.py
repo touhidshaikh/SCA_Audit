@@ -12,7 +12,7 @@ def generate_report(folder, output_folder):
     report_file = os.path.join(output_folder,'local-php-security-checker-result.txt')
     # generate the report
     try:
-        subprocess.run(["local-php-security-checker", "-no-dev","--path=./"+folder,">", report_file], check=True)
+        subprocess.run(["./bin/local-php-security-checker", "-no-dev","--path="+folder,">", report_file], check=True)
         print(f"Successfully generated report for {folder} in {output_folder}")
     except subprocess.CalledProcessError as e:
         raise ValueError(f"Failed to generate report for {folder}. Error: {e.stderr}")

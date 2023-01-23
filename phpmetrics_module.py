@@ -15,7 +15,7 @@ def generate_report(folder, output_folder):
 
     # generate the report
     try:
-        subprocess.run(["phpmetrics", folder, "--report-html=" + output_folder], check=True)
+        subprocess.run(["./bin/phpmetrics", folder, "--report-html=" + output_folder], check=True)
         print(f"Successfully generated report for {folder} in {output_folder}")
     except subprocess.CalledProcessError as e:
         raise ValueError(f"Failed to generate report for {folder}. Error: {e.stderr}")
