@@ -1,4 +1,9 @@
 #!/usr/bin/python
+
+#File Name: SCA_Audit.py
+#Author: Touhid Shaikh
+#Description: SBOM, Audit
+
 import csv
 import argparse
 import os
@@ -7,8 +12,6 @@ import urllib.parse
 import subprocess
 import phpmetrics_module
 import local_php_security_checker_module
-
-
 
 # Create the parser
 parser = argparse.ArgumentParser(description='Clone private repositories')
@@ -30,7 +33,6 @@ with open(args.csv_file, newline='') as csvfile:
         repo_name = row['Name']
         repo_url = row['URL']
         repo_url_added = f"https://"+args.username+":"+urllib.parse.quote(args.password)+"@"+repo_url
-        
         # Create the local directory using the repository name
         repo_folder = os.path.join(args.local_dir, repo_name)
         if not os.path.exists(repo_folder):
@@ -41,17 +43,18 @@ with open(args.csv_file, newline='') as csvfile:
             print("Clonning: "+repo_name+" From: "+repo_url)
             repo = Repo.clone_from(repo_url_added, repo_folder,env={"GIT_HTTP_USERNAME": args.username, "GIT_HTTP_PASSWORD": args.password})
         except:
-            os.system("rm -rf "+repo_name)
+            os.system("rm -rf "+repo_folder)
         
         # Create the local directory using the repository name for result output
         result_folder = "./results/"+str(repo_name)
         if not os.path.exists(result_folder):
             os.makedirs(result_folder)
-
-        print("Scanning Reportitories using PHPMatrics"+repo_folder)
-        phpmetrics_module.generate_report(repo_folder, result_folder)
-
-        print("Runing PHP Local Security Check on "+repo_folder)
-        local_php_security_checker_module.generate_report(repo_folder, result_folder)
-
         
+        # Check if the composer.json file exists in the repository folder
+        if os.path.isfile(os.path.join(repo_folder, 'composer.json')):
+            print("Scanning Reportitories using PHPMatrics for "+ repo_folder)
+            phpmetrics_module.generate_report(repo_folder, result_folder)
+            print("Running PHP Local Security Check on "+ repo_folder)
+            local_php_security_checker_module.generate_report(repo_folder, result_folder)
+        else:
+            print(f"composer.json file not found in {repo_folder}. Skipping PHPMetrics and local-php-security-checker report generation.")
